@@ -69,6 +69,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 		cellphone, _ := strconv.Atoi(r.FormValue("cellphone"))
 
 		p := &person{}
+
 		p.ID = id
 		p.Name = name
 		p.Age = uint8(age)
