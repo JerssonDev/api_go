@@ -24,11 +24,11 @@ func addFriend(p *person) {
 func main() {
 
 	http.HandleFunc("/", homePage)
-	http.HandleFunc("/search", search)
-	http.HandleFunc("/all", friends)
-	http.HandleFunc("/create", create)
-	http.HandleFunc("/update", update)
-	http.HandleFunc("/delete", delete)
+	http.HandleFunc("/api/v1/search", search)
+	http.HandleFunc("/api/v1/all", friends)
+	http.HandleFunc("/api/v1/create", create)
+	http.HandleFunc("/api/v1/update", update)
+	http.HandleFunc("/api/v1/delete", delete)
 
 	log.Fatal(http.ListenAndServe(":8081", nil))
 
@@ -36,19 +36,16 @@ func main() {
 
 func homePage(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Welcome!")
-	//fmt.Println("Punto Salida: raiz")
 }
 
 func friends(w http.ResponseWriter, r *http.Request) {
 
 	collection := persons
-
-	//fmt.Println("Punto Salida: Todos los articulos")
 	json.NewEncoder(w).Encode(collection)
 }
 func create(w http.ResponseWriter, r *http.Request) {
 
-	if r.URL.Path != "/create" {
+	if r.URL.Path != "/api/v1/create" {
 		http.Error(w, "404 not found.", http.StatusNotFound)
 		return
 	}
@@ -68,7 +65,10 @@ func create(w http.ResponseWriter, r *http.Request) {
 		age, _ := strconv.Atoi(r.FormValue("age"))
 		cellphone, _ := strconv.Atoi(r.FormValue("cellphone"))
 
-		p := &person{}
+		var p *person = &person{}
+
+		fmt.Fprintf(w, "Direccion en memoria de person! = %v\n", &person{})
+		fmt.Fprintf(w, "Direccion en memoria de p! = %v\n", &p)
 
 		p.ID = id
 		p.Name = name
@@ -80,14 +80,14 @@ func create(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "Person created! = %v\n", r.PostForm)
 
 	default:
-		fmt.Fprintf(w, "Lo siento, los metodos soportados son GET y POST.")
+		fmt.Fprintf(w, "Sorry, the supported methods are GET and POST!")
 	}
 
 }
 
 func search(w http.ResponseWriter, r *http.Request) {
 
-	if r.URL.Path != "/search" {
+	if r.URL.Path != "/api/v1/search" {
 		http.Error(w, "404 not found.", http.StatusNotFound)
 		return
 	}
@@ -117,13 +117,13 @@ func search(w http.ResponseWriter, r *http.Request) {
 		}
 
 	default:
-		fmt.Fprintf(w, "Lo siento, los metodos soportados son GET y POST.")
+		fmt.Fprintf(w, "Sorry, the supported methods are GET and POST!")
 	}
 }
 
 func update(w http.ResponseWriter, r *http.Request) {
 
-	if r.URL.Path != "/update" {
+	if r.URL.Path != "/api/v1/update" {
 		http.Error(w, "404 not found.", http.StatusNotFound)
 		return
 	}
@@ -158,13 +158,13 @@ func update(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "Updated person!")
 
 	default:
-		fmt.Fprintf(w, "Lo siento, los metodos soportados son GET y POST.")
+		fmt.Fprintf(w, "Sorry, the supported methods are GET and POST!")
 	}
 }
 
 func delete(w http.ResponseWriter, r *http.Request) {
 
-	if r.URL.Path != "/delete" {
+	if r.URL.Path != "/api/v1/delete" {
 		http.Error(w, "404 not found.", http.StatusNotFound)
 		return
 	}
@@ -198,6 +198,6 @@ func delete(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "Person removed!")
 
 	default:
-		fmt.Fprintf(w, "Lo siento, los metodos soportados son GET y POST.")
+		fmt.Fprintf(w, "Sorry, the supported methods are GET and POST!")
 	}
 }
